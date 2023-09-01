@@ -12,7 +12,7 @@ import { CiudadModule } from './ciudad/ciudad.module';
     "username":"root",
     "password":"timo2906",
     "database":"db_colegio",
-    "entities":[__dirname+"/**/**/**.entity(.ts,.js)"],
+    "entities":[`${__dirname}/**/**/**.entity{.ts,.js}`],
     "synchronize":true
   }), CiudadModule],
   controllers: [AppController],
