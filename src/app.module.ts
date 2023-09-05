@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CiudadModule } from './ciudad/ciudad.module';
-import { ClaseModule } from './clase/clase.module';
+
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,7 +15,7 @@ import { ClaseModule } from './clase/clase.module';
     "database":"db_colegio",
     "entities":[`${__dirname}/**/**/**.entity{.ts,.js}`],
     "synchronize":true
-  }), CiudadModule, ClaseModule],
+  }), CiudadModule],
   controllers: [AppController],
   providers: [AppService],
 })
