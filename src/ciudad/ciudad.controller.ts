@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CiudadService } from './ciudad.service';
 import { Ciudad } from './entities/ciudad.entity';
+import { CiudadDto } from "./dto/CiudadDto";
 
 @Controller('ciudad')
 export class CiudadController {
@@ -20,5 +21,10 @@ export class CiudadController {
     @Get(':id')
     async getId(@Param('id') id:number):Promise<Ciudad>{
         return await this.ciudadService.findById(id);
+    }
+
+    @Post('crear')
+    async crearCiudad(@Body() ciudadDTO:CiudadDto):Promise<boolean>{
+        return this.ciudadService.create(ciudadDTO);
     }
 }

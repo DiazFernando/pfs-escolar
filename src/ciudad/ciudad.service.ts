@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ciudad } from './entities/ciudad.entity';
 import { FindOneOptions, Repository } from 'typeorm';
+import { CiudadDto } from './dto/CiudadDto';
 
 @Injectable()
 export class CiudadService {
@@ -45,4 +46,23 @@ export class CiudadService {
             },HttpStatus.NOT_FOUND)
         }
     }
+
+    async create(ciudadDTO:CiudadDto): Promise<boolean>{
+        try{
+            let ciudad:Ciudad = await this.ciudadRepository.save(new Ciudad(ciudadDTO.nombre));
+        if(ciudad)
+
+        return true;
+            else
+                throw new Error('No se pudo crear la ciudad');
+        }
+        catch(error){
+            throw new HttpException({
+                status:HttpStatus.NOT_FOUND,
+                error:'Error en ciudad - ' + error,
+
+            },HttpStatus.NOT_FOUND)
+        }
+    }
+
 }
