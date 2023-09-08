@@ -4,6 +4,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CiudadModule } from './ciudad/ciudad.module';
 import { ProfesorModule } from './profesor/profesor.module';
+import { EscuelaModule } from './escuela/escuela.module';
+import { ClasesModule } from './clases/clases.module';
+import { AsistenciaModule } from './asistencia/asistencia.module';
+import { EstudianteModule } from './estudiante/estudiante.module';
+
 
 
 @Module({
@@ -16,7 +21,7 @@ import { ProfesorModule } from './profesor/profesor.module';
     "database":"db_colegio",
     "entities":[`${__dirname}/**/**/**.entity{.ts,.js}`],
     "synchronize":true
-  }), CiudadModule, ProfesorModule],
+  }), CiudadModule, ProfesorModule, EscuelaModule, ClasesModule, AsistenciaModule, EstudianteModule],
   controllers: [AppController],
   providers: [AppService],
 })
