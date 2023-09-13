@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CiudadService } from './ciudad.service';
-import { Ciudad } from './entities/ciudad.entity';
 import { CiudadDTO } from './dto/Ciudad.dto';
+import { Ciudad } from './entities/ciudad.entity';
 
 @Controller('ciudad')
 export class CiudadController {
@@ -9,17 +9,17 @@ export class CiudadController {
     constructor(private readonly ciudadService: CiudadService){}
 
     @Get('raw')
-    async getAllRaw():Promise<Ciudad[]>{
+    async getAllRaw():Promise<CiudadDTO[]>{
         return await this.ciudadService.findAllRaw();
     }
 
     @Get('orm')
-    async getAllOrm():Promise<Ciudad[]>{
+    async getAllOrm():Promise<CiudadDTO[]>{
         return await this.ciudadService.findAllOrm();
     }
 
     @Get(':id')
-    async getId(@Param('id')id:number) : Promise<Ciudad>{
+    async getId(@Param('id')id:number) : Promise<CiudadDTO>{
         return await this.ciudadService.findById(id);
     }
 
@@ -34,7 +34,7 @@ export class CiudadController {
     }
 
     @Delete('eliminar/:id')
-    async eliminarCiudad(@Param('id')id:number) : Promise<Ciudad>{
+    async eliminarCiudad(@Param('id')id:number) : Promise<CiudadDTO>{
         return await this.ciudadService.delete(id);
     }
 }

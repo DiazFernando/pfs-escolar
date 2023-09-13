@@ -1,6 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Escuela } from "src/escuela/entities/escuela.entity";
+import { Profesor } from "src/profesor/entities/profesor.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: 'Clases'})
+@Entity({name: 'clases'})
 export class Clase {
     
     @PrimaryGeneratedColumn()
@@ -8,6 +10,15 @@ export class Clase {
 
     @Column()
     nombre:string;
+
+    @ManyToOne(()=>Profesor,profesor=>profesor.clases)
+    @JoinColumn({name:"id_profesor"})
+    profesor:Profesor;
+
+    @ManyToOne(()=>Escuela,escuela=>escuela.clases)
+    @JoinColumn({name:"id_escuela"})
+    escuela:Escuela;
+
 
     constructor(nombre:string){
         this.nombre=nombre;

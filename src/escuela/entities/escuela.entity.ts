@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Ciudad } from "src/ciudad/entities/ciudad.entity";
+import { Clase } from "src/clases/entities/clase.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'escuela'})
 export class Escuela {
@@ -12,6 +14,13 @@ export class Escuela {
 
     @Column()
     domicilio:string;
+
+    @ManyToOne(()=>Ciudad,ciudad=>ciudad.escuelas)
+    @JoinColumn({name:"id_ciudad"})
+    ciudad:Ciudad;
+
+    @OneToMany(()=>Clase,clases=>clases.escuela)
+    clases:Clase[];
 
     //constructor
     constructor(nombre:string,domicilio:string){
