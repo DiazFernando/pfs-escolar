@@ -20,7 +20,7 @@ export class Profesor {
     clases:Clase[];
 
     @OneToMany(()=> CiudadProfesor,domicilios=>domicilios.profesor)
-    public domicilios:CiudadProfesor[];
+    domicilios:CiudadProfesor[];
 
     constructor(nombre:string,apellido:string){
         this.nombre= nombre;
@@ -46,7 +46,6 @@ export class Profesor {
     public setApellido(apellido:string){
         this.apellido = apellido;
     }
-
 }
 
 
