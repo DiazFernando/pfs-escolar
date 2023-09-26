@@ -17,7 +17,6 @@ export class CiudadService {
     async findAllRaw():Promise<CiudadDTO[]>{
         this.ciudades = [];
         let datos = await this.ciudadRepository.query("select * from ciudad");
-
         datos.forEach(element => {
             let ciudad : Ciudad = new Ciudad(element['nombre']);
             this.ciudades.push(ciudad)
@@ -73,7 +72,8 @@ export class CiudadService {
                 throw new Error('no se pudo encontrar la ciudad a modificar ');
             else{
                 let ciudadVieja = ciudad.getNombre();
-                ciudad.setNombre(ciudadDTO.nombre);
+                if(ciudadDTO.nombre != null && ciudadDTO.nombre != undefined)
+                    ciudad.setNombre(ciudadDTO.nombre);
                 ciudad = await this.ciudadRepository.save(ciudad);
                 return `OK - ${ciudadVieja} --> ${ciudadDTO.nombre}`
             }
