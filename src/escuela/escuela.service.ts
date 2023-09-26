@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEscuelaDto } from './dto/create-escuela.dto';
-import { UpdateEscuelaDto } from './dto/update-escuela.dto';
 import { Escuela } from './entities/escuela.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
@@ -41,12 +40,12 @@ export class EscuelaService {
       return null;
   }
 
-  async update(id: number, updateEscuelaDto: UpdateEscuelaDto) {
+  async update(id: number, createEscuelaDto: CreateEscuelaDto) {
     const criterio : FindOneOptions = {where:{id:id}};
     let escuela:Escuela = await this.escuelaRepository.findOne(criterio);
     let escuelaVieja = escuela.getNombre();
     if(escuela){
-      escuela.setNombre(updateEscuelaDto.nombre);
+      escuela.setNombre(createEscuelaDto.nombre);
       escuela = await this.escuelaRepository.save(escuela);
       if(escuela)
         return `Se reemplaso ${escuelaVieja} ==> ${escuela.getNombre()}`

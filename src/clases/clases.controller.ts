@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { ClasesService } from './clases.service';
 import { CreateClaseDto } from './dto/create-clase.dto';
-import { UpdateClaseDto } from './dto/update-clase.dto';
 import { Clase } from './entities/clase.entity';
 
 @Controller('clases')
@@ -30,7 +29,7 @@ export class ClasesController {
 
   //UPDATE
   @Put('actualizar/:id')
-  async actualizarClase(@Param('id') id: number, @Body() updateClaseDto: UpdateClaseDto):Promise<String> {
+  async actualizarClase(@Param('id') id: number, @Body() updateClaseDto: CreateClaseDto):Promise<String> {
     return await this.clasesService.update(id, updateClaseDto);
   }
 

@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { EstudianteService } from './estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
-import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 
 @Controller('estudiante')
 export class EstudianteController {
@@ -12,10 +11,10 @@ export class EstudianteController {
     return this.estudianteService.create(createEstudianteDto);
   }
 
-  @Post('con_relacion')
-  async createConRelacion(@Body() estudianteDto: CreateEstudianteDto):Promise<boolean> {
+  /*@Post('con_relacion')
+  async createConRelacion(@Body() createEstudianteDto: CreateEstudianteDto):Promise<boolean> {
     return await this.estudianteService.createConRelacion(createEstudianteDto);
-  }
+  }*/
 
   @Get()
   findAll() {
@@ -28,7 +27,7 @@ export class EstudianteController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstudianteDto: UpdateEstudianteDto) {
+  update(@Param('id') id: string, @Body() updateEstudianteDto: CreateEstudianteDto) {
     return this.estudianteService.update(+id, updateEstudianteDto);
   }
 

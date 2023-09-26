@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
-import { UpdateProfesorDto } from './dto/update-profesor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profesor } from './entities/profesor.entity';
 import { Repository } from 'typeorm';
@@ -32,9 +31,10 @@ export class ProfesorService {
     if(!ciudad)
         return 'error - no existe la ciudad para este profesor'
 
-    const nuevo_domicilio = await this.ciudadProfesorRepository.findOne({where:{ciudad:ciudadId}})
+    const nuevo_domicilio = await this.ciudadProfesorRepository.findOne({where:{ciudadId:ciudadId,profesorId:profesorId}})
     if(nuevo_domicilio)
     return 'profesor ya tiene domicilio'
+  return await this.ciudadProfesorRepository.save(new CiudadProfesor(ciudadId,profesorId,domicilio))
   }
 
   findAll() {
@@ -45,7 +45,7 @@ export class ProfesorService {
     return `This action returns a #${id} profesor`;
   }
 
-  update(id: number, updateProfesorDto: UpdateProfesorDto) {
+  update(id: number, createProfesorDto: CreateProfesorDto) {
     return `This action updates a #${id} profesor`;
   }
 

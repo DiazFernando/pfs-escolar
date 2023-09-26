@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { EscuelaService } from './escuela.service';
 import { CreateEscuelaDto } from './dto/create-escuela.dto';
-import { UpdateEscuelaDto } from './dto/update-escuela.dto';
 import { Escuela } from './entities/escuela.entity';
 
 @Controller('escuela')
@@ -24,8 +23,8 @@ export class EscuelaController {
   }
 
   @Put('actualizar/:id')
-  async update(@Param('id') id: number, @Body() updateEscuelaDto: UpdateEscuelaDto):Promise<string> {
-    return await this.escuelaService.update(id, updateEscuelaDto);
+  async update(@Param('id') id: number, @Body() createEscuelaDto: CreateEscuelaDto):Promise<string> {
+    return await this.escuelaService.update(id, createEscuelaDto);
   }
 
   @Delete('eliminar/:id')

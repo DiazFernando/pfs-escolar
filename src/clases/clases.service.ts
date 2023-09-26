@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateClaseDto } from './dto/create-clase.dto';
-import { UpdateClaseDto } from './dto/update-clase.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Clase } from './entities/clase.entity';
 import { FindOneOptions, Repository } from 'typeorm';
@@ -43,7 +42,7 @@ export class ClasesService {
       return null;
   }
 
-  async update(id: number, updateClaseDto: UpdateClaseDto):Promise<string> {
+  async update(id: number, updateClaseDto: CreateClaseDto):Promise<string> {
     const criterio : FindOneOptions = {where:{id:id}};
     let clase:Clase = await this.claseRepository.findOne(criterio);
     let nombreViejo = clase.getNombre();
