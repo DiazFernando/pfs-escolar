@@ -1,7 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { CiudadEstudiante } from "src/ciudad/entities/ciudad_estudiante.entity";
+import { Clase } from "src/clases/entities/clase.entity";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'estudiantes'})
-export class Clase {
+export class Estudiante {
+    [x: string]: any;
     
     @PrimaryGeneratedColumn()
     id:number;
@@ -14,6 +17,12 @@ export class Clase {
 
     @Column()
     fechaDeNacimiento:Date;
+
+    @ManyToMany(()=>Clase,clases=>clases.estudiantes)
+    clases:Clase[];
+
+    @OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.estudiante)
+    public domicilios:CiudadEstudiante[];
 
     constructor(nombre:string,apellido:string,fechaDeNacimiento:Date){
         this.nombre=nombre;

@@ -31,11 +31,11 @@ export class ClasesService {
       }
 
   async findAll():Promise<Clase[]> {
-    return await this.claseRepository.find();
+    return await this.claseRepository.find({relations:['estudiantes']});
   }
 
   async findOne(id: number) {
-    const criterio :FindOneOptions = {where:{id:id}}
+    const criterio :FindOneOptions = {where:{id:id}};
     let clase:Clase = await this.claseRepository.findOne(criterio);
     if(clase)
       return clase;

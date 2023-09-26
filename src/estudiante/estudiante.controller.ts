@@ -12,6 +12,11 @@ export class EstudianteController {
     return this.estudianteService.create(createEstudianteDto);
   }
 
+  @Post('con_relacion')
+  async createConRelacion(@Body() estudianteDto: CreateEstudianteDto):Promise<boolean> {
+    return await this.estudianteService.createConRelacion(createEstudianteDto);
+  }
+
   @Get()
   findAll() {
     return this.estudianteService.findAll();
