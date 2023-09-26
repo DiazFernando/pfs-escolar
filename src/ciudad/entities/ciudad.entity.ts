@@ -5,6 +5,7 @@ import { CiudadEstudiante } from "./ciudad_estudiante.entity";
 
 @Entity({name:"ciudad"})
 export class Ciudad{
+
     @PrimaryGeneratedColumn()
     id:number;
 
@@ -15,10 +16,10 @@ export class Ciudad{
     public escuelas:Escuela[];
 
     @OneToMany(()=> CiudadProfesor,domicilios=>domicilios.ciudad)
-    public domiciliosProfesor:CiudadProfesor[];
+    public domicilios:CiudadProfesor[];
 
-    @OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.ciudad)
-    public domiciliosEstudiante:CiudadEstudiante[];
+    /*@OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.ciudad)
+    public domiciliosEstudiante:CiudadEstudiante[];*/
 
     constructor(nombre:string){
         this.nombre=nombre

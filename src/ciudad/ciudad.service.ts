@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository , FindOneOptions } from 'typeorm';
 import { Ciudad } from './entities/ciudad.entity';
-import { CiudadDTO } from './dto/Ciudad.dto';
+import { CiudadDTO } from './dto/ciudad.dto';
 
 @Injectable()
 export class CiudadService {
