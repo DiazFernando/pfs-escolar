@@ -93,12 +93,15 @@ async update(profesorDto : CreateProfesorDto, id:number) : Promise<String>{
         if(!profesor)
             throw new Error('no se pudo encontrar el profesor a modificar ');
         else{
-            let profesorAntiguo = profesor.getNombre();
-            if(profesorDto.nombre != null && profesorDto.nombre != undefined || profesorDto.apellido != null && profesorDto.apellido != undefined)
+            let profesorAntiguo = profesor.getNombre() + ' ' + profesor.getApellido();
+            if((profesorDto.nombre != null && profesorDto.nombre != undefined && profesorDto.nombre != "") && (profesorDto.apellido != null && profesorDto.apellido != undefined && profesorDto.apellido != "")){
                 profesor.setNombre(profesorDto.nombre);
-            profesor = await this.ciudadRepository.save(profesor);
-            return `OK - ${profesorAntiguo} --> ${profesorDto.nombre}`
-        }
+                profesor.setApellido(profesorDto.apellido);
+            profesor = await this.profesorRepository.save(profesor);
+            return `OK - ${profesorAntiguo} --> ${profesorDto.nombre} ${profesorDto.apellido}`
+          }else{
+              return `datos incorrectos --> ${profesorDto.nombre} ${profesorDto.apellido}`
+            }}
     }
     catch(error){
         throw new HttpException({
@@ -114,7 +117,7 @@ async delete(id:number): Promise<any>{
         const criterio : FindOneOptions = { where : {id:id} }
         let profesor : Profesor = await this.profesorRepository.findOne(criterio);
         if(!profesor)
-            throw new Error('no puede se eliminar ciudad ');
+            throw new Error('no puede se eliminar profesor ');
         else{
             await this.profesorRepository.remove(profesor);
             return { id:id,
@@ -125,7 +128,7 @@ async delete(id:number): Promise<any>{
     catch(error){
         throw new HttpException({
             status: HttpStatus.NOT_FOUND,
-            error: 'Error en ciudad - ' + error
+            error: 'Error en profesor - ' + error
         },HttpStatus.NOT_FOUND)
     }
     
