@@ -6,33 +6,38 @@ import { CreateProfesorDto } from './dto/create-profesor.dto';
 export class ProfesorController {
   constructor(private readonly profesorService: ProfesorService) {}
 
-  @Post('agregar-domicilio')
-  async addDomicilio(@Body() body: any):Promise<any> {
-    return this.profesorService.createDomicilio(body);
-  }
+  @Get('raw')
+    async getAllRaw():Promise<CreateProfesorDto[]>{
+        return await this.profesorService.findAllRaw();
+    }
 
-  @Post()
-  create(@Body() createProfesorDto: CreateProfesorDto) {
-    return this.profesorService.create(createProfesorDto);
-  }
+    @Get('orm')
+    async getAllOrm():Promise<CreateProfesorDto[]>{
+        return await this.profesorService.findAllOrm();
+    }
 
-  @Get('/all')
-  findAll() {
-    return this.profesorService.findAll();
-  }
+    @Get(':id')
+    async getId(@Param('id') id:number):Promise<CreateProfesorDto>{
+        return await this.profesorService.findById(id);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.profesorService.findOne(id);
-  }
+    @Post('crear')
+    async crearProfesor(@Body() profesorDto:CreateProfesorDto):Promise<boolean>{
+        return await this.profesorService.create(profesorDto);
+    }
 
-  @Put('modificar/:id')
-  update(@Param('id') id: number, @Body() createProfesorDto: CreateProfesorDto) {
-    return this.profesorService.update(id, createProfesorDto);
-  }
+    @Post('agregar-domicilio')
+    async addDomicilio(@Body() body: any):Promise<any> {
+        return this.profesorService.createDomicilio(body);
+    }
 
-  @Delete('eliminar/:id')
-  remove(@Param('id') id: number) {
-    return this.profesorService.remove(id);
-  }
+    @Put('actualizar/:id')
+    async actualizarProfesorId(@Body() profesorDto:CreateProfesorDto, @Param('id') id: number):Promise<String>{
+        return await this.profesorService.update(profesorDto,id)
+    }
+
+    @Delete('eliminar/:id')
+    async eliminarProfesor(@Param('id') id:number):Promise<CreateProfesorDto>{
+        return await this.profesorService.delete(id);
+    }
 }

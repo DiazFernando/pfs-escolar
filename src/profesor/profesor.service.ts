@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profesor } from './entities/profesor.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Ciudad } from 'src/ciudad/entities/ciudad.entity';
 import { CiudadProfesor } from 'src/ciudad/entities/ciudad_profesor.entity';
 
 @Injectable()
 export class ProfesorService {
+
+  private profesores:Profesor[] = [];
 
   constructor(@InjectRepository(Profesor)
               private readonly profesorRepository:Repository<Profesor>,
@@ -16,40 +18,116 @@ export class ProfesorService {
               @InjectRepository(CiudadProfesor)
               private readonly ciudadProfesorRepository:Repository<CiudadProfesor>){}
 
-  create(createProfesorDto: CreateProfesorDto) {
-    return 'This action adds a new profesor';
-  }
+  
+  async findAllRaw():Promise<CreateProfesorDto[]>{
+    this.profesores = [];
+    let datos = await this.profesorRepository.query("select * from profesor");
+    datos.forEach(element => {
+        let profesor : Profesor = new Profesor(element['nombre'],element['apellido']);
+        this.profesores.push(profesor)
+    });
 
-  async createDomicilio(body){
-    const { ciudadId, profesorId,domicilio} = body;
+    return this.profesores;
+}
 
-    const profesor = await this.profesorRepository.findOne({where:{id:profesorId}})
-    if(!profesor)
-      return 'error - no existe este profesor'
+async findAllOrm():Promise<CreateProfesorDto[]>{
+    return await this.profesorRepository.find();
+}
+
+async findById(id :number):Promise<CreateProfesorDto> {
+    try{
+        const criterio : FindOneOptions = { where: {id:id} };
+        const profesor : CreateProfesorDto = await this.profesorRepository.findOne(criterio);
+        if(profesor)
+            return profesor
+        else  
+            throw new Error('No se encuentra el profesor');
+    }
+    catch(error){
+        throw new HttpException({
+            status: HttpStatus.CONFLICT,
+            error: 'Error en profesor - ' + error
+        },HttpStatus.NOT_FOUND)
+    }
     
-    const ciudad = await this.ciudadRepository.findOne({where:{id:ciudadId}})
-    if(!ciudad)
-        return 'error - no existe la ciudad para este profesor'
+}
 
-    const nuevo_domicilio = await this.ciudadProfesorRepository.findOne({where:{ciudadId:ciudadId,profesorId:profesorId}})
-    if(nuevo_domicilio)
-    return 'profesor ya tiene domicilio'
-  return await this.ciudadProfesorRepository.save(new CiudadProfesor(ciudadId,profesorId,domicilio))
-  }
+async create(profesorDto:CreateProfesorDto):Promise<boolean>{
+    try{
+        let profesor:Profesor = await this.profesorRepository.save(new Profesor(profesorDto.nombre,profesorDto.apellido));
+        if(profesor)
+           return true;
+       else
+           throw new Error('No se pudo crear el profesor');
+    }
+    catch(error){
+        throw new HttpException({
+            status: HttpStatus.NOT_FOUND,
+            error: 'Error en profesor - ' + error
+        },HttpStatus.NOT_FOUND)
+    }
 
-  findAll() {
-    return `This action returns all profesor`;
-  }
+}
 
-  findOne(id: number) {
-    return `This action returns a #${id} profesor`;
-  }
+async createDomicilio(body){
+  const { ciudadId, profesorId,domicilio} = body;
 
-  update(id: number, createProfesorDto: CreateProfesorDto) {
-    return `This action updates a #${id} profesor`;
-  }
+  const profesor = await this.profesorRepository.findOne({where:{id:profesorId}})
+  if(!profesor)
+    return 'error - no existe este profesor'
+  
+  const ciudad = await this.ciudadRepository.findOne({where:{id:ciudadId}})
+  if(!ciudad)
+      return 'error - no existe la ciudad para este profesor'
 
-  remove(id: number) {
-    return `This action removes a #${id} profesor`;
-  }
+  const nuevo_domicilio = await this.ciudadProfesorRepository.findOne({where:{ciudadId:ciudadId,profesorId:profesorId}})
+  if(nuevo_domicilio)
+  return 'profesor ya tiene domicilio'
+return await this.ciudadProfesorRepository.save(new CiudadProfesor(ciudadId,profesorId,domicilio))
+}
+
+async update(profesorDto : CreateProfesorDto, id:number) : Promise<String>{
+    try{
+        const criterio : FindOneOptions = { where : {id:id} }
+        let profesor : Profesor = await this.profesorRepository.findOne(criterio);
+        if(!profesor)
+            throw new Error('no se pudo encontrar el profesor a modificar ');
+        else{
+            let profesorAntiguo = profesor.getNombre();
+            if(profesorDto.nombre != null && profesorDto.nombre != undefined || profesorDto.apellido != null && profesorDto.apellido != undefined)
+                profesor.setNombre(profesorDto.nombre);
+            profesor = await this.ciudadRepository.save(profesor);
+            return `OK - ${profesorAntiguo} --> ${profesorDto.nombre}`
+        }
+    }
+    catch(error){
+        throw new HttpException({
+            status: HttpStatus.NOT_FOUND,
+            error: 'Error en profesor - ' + error
+        },HttpStatus.NOT_FOUND)
+    }
+
+}
+
+async delete(id:number): Promise<any>{
+    try{
+        const criterio : FindOneOptions = { where : {id:id} }
+        let profesor : Profesor = await this.profesorRepository.findOne(criterio);
+        if(!profesor)
+            throw new Error('no puede se eliminar ciudad ');
+        else{
+            await this.profesorRepository.remove(profesor);
+            return { id:id,
+                    message:'se elimino exitosamente'
+                }
+            }
+    }
+    catch(error){
+        throw new HttpException({
+            status: HttpStatus.NOT_FOUND,
+            error: 'Error en ciudad - ' + error
+        },HttpStatus.NOT_FOUND)
+    }
+    
+}
 }
