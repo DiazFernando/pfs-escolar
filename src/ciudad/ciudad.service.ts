@@ -31,7 +31,7 @@ export class CiudadService {
 
     async findById(id :number) : Promise<CiudadDTO> {
         try{
-            const criterio : FindOneOptions = { where: { id:id} };
+            const criterio : FindOneOptions = { where: {id:id} };
             const ciudad : CiudadDTO = await this.ciudadRepository.findOne( criterio );
             if(ciudad)
                 return ciudad
@@ -92,7 +92,7 @@ export class CiudadService {
             const criterio : FindOneOptions = { where : {id:id} }
             let ciudad : Ciudad = await this.ciudadRepository.findOne(criterio);
             if(!ciudad)
-                throw new Error('no se eliminar ciudad ');
+                throw new Error('no puede se eliminar ciudad ');
             else{
                 await this.ciudadRepository.remove(ciudad);
                 return { id:id,
