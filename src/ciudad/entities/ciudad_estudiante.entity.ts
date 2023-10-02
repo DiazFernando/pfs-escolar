@@ -1,12 +1,15 @@
 import { Ciudad } from "src/ciudad/entities/ciudad.entity";
 import { Estudiante } from "src/estudiante/entities/estudiante.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'ciudad_estudiante'})
 export class CiudadEstudiante{
 
-    @PrimaryGeneratedColumn()
-    id:number;
+    @PrimaryColumn()
+    ciudadId:number;
+
+    @PrimaryColumn()
+    estudianteId:number;
 
     @Column()
     direccion:string;
@@ -16,6 +19,12 @@ export class CiudadEstudiante{
 
     @ManyToOne(()=>Ciudad,ciudad=>ciudad.domicilios)
     ciudad:Ciudad;
+
+    constructor(ciudadId:number,estudianteId:number,direccion:string){
+        this.ciudadId=ciudadId;
+        this.estudianteId=estudianteId;
+        this.direccion=direccion;
+    }
 
 
 }

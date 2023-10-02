@@ -26,6 +26,5 @@ export class CiudadProfesor{
         this.direccion=direccion;
     }
 
-
 }
 

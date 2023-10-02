@@ -1,28 +1,30 @@
+import { IsNotEmpty } from "class-validator";
 import { CiudadEstudiante } from "src/ciudad/entities/ciudad_estudiante.entity";
 import { Clase } from "src/clases/entities/clase.entity";
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'estudiantes'})
 export class Estudiante {
-    [x: string]: any;
     
     @PrimaryGeneratedColumn()
     id:number;
 
     @Column()
+    @IsNotEmpty()
     nombre:string;
 
     @Column()
+    @IsNotEmpty()
     apellido:string;
 
     @Column()
     fechaDeNacimiento:Date;
 
-    @ManyToMany(()=>Clase,clases=>clases.estudiantes)
+    @OneToMany(()=>Clase,clases=>clases.estudiantes)
     clases:Clase[];
 
     @OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.estudiante)
-    public domicilios:CiudadEstudiante[];
+    domicilios:CiudadEstudiante[];
 
     constructor(nombre:string,apellido:string,fechaDeNacimiento:Date){
         this.nombre=nombre;
@@ -54,9 +56,9 @@ export class Estudiante {
         return this.fechaDeNacimiento;
     }
 
-    /*public setFechaDeNacimiento(:string){
-        this.apellido=apellido;
-    }*/
+    public setFechaDeNacimiento(nuevaFecha:Date){
+        this.fechaDeNacimiento=nuevaFecha;
+    }
 
 
 }
