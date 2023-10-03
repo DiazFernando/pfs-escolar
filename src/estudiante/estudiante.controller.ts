@@ -26,10 +26,10 @@ export class EstudianteController {
         return await this.estudianteService.create(estudianteDto);
     }
 
-    /*@Post('con_relacion')
-  async createConRelacion(@Body() createEstudianteDto: CreateEstudianteDto):Promise<boolean> {
-    return await this.estudianteService.createConRelacion(createEstudianteDto);
-  }*/
+    @Post('agregar-clase')
+    async addClase(@Body() body:any):Promise<any>{
+    return await this.estudianteService.addClase(body);
+    }
 
     @Post('agregar-domicilio')
     async addDomicilio(@Body() body: any):Promise<any> {

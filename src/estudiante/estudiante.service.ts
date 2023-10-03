@@ -6,6 +6,7 @@ import { Clase } from 'src/clases/entities/clase.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { Ciudad } from 'src/ciudad/entities/ciudad.entity';
 import { CiudadEstudiante } from 'src/ciudad/entities/ciudad_estudiante.entity';
+import { EstudianteClase } from './entities/estudiante_clase.entity';
 
 @Injectable()
 export class EstudianteService {
@@ -17,6 +18,8 @@ export class EstudianteService {
               private estudianteRepository:Repository<Estudiante>,
               @InjectRepository(Clase)
               private claseRepository:Repository<Clase>,
+              @InjectRepository(EstudianteClase)
+              private estudianteClaseRepository:Repository<EstudianteClase>,
               @InjectRepository(Ciudad)
               private readonly ciudadRepository:Repository<Ciudad>,
               @InjectRepository(CiudadEstudiante)
@@ -91,17 +94,19 @@ async createDomicilio(body){
 return await this.ciudadEstudianteRepository.save(new CiudadEstudiante(ciudadId,estudianteId,domicilio))
 }
 
-/*async createConRelacion (estudianteDto:CreateEstudianteDto):Promise<boolean>{
-    let estudiante:Estudiante = new Estudiante(estudianteDto.nombre,estudianteDto.apellido,estudianteDto.fechaDeNacimiento)
-    const clase:Clase[] = await this.claseRepository.findOne();
-    
-    if(clase)
-    estudiante.clases= clase;
-  await this.estudianteRepository.save(estudiante);
-  if(estudiante)
-        return true;
-    return false;
-  }*/
+async addClase(body):Promise<any>{
+    const {claseId,estudianteId} = body;
+    const estudiante = await this.estudianteRepository.findOne({where:{id:estudianteId}})
+    if(!estudiante)
+      return `error - no se encontre el estudiante con id ${estudianteId}`;
+    const clase = await this.claseRepository.findOne({where:{id:claseId}})
+    if(!clase)
+      return 'error - no se encontro esa clase';
+    const clase_estudiante = await this.estudianteClaseRepository.findOne({where:{claseId:claseId,estudianteId:estudianteId}})
+    if(clase_estudiante)
+      return 'error - el estudiante ya tiene asignada esa clase';
+    return await this.estudianteClaseRepository.save(new EstudianteClase(estudianteId,claseId));
+  }
 
 async update(estudianteDto : CreateEstudianteDto, id:number) : Promise<String>{
     try{

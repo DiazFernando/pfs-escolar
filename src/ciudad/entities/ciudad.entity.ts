@@ -18,8 +18,8 @@ export class Ciudad{
     @OneToMany(()=> CiudadProfesor,domicilios=>domicilios.ciudad)
     public domicilios:CiudadProfesor[];
 
-    /*@OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.ciudad)
-    public domiciliosEstudiante:CiudadEstudiante[];*/
+    @OneToMany(()=> CiudadEstudiante,domicilios=>domicilios.ciudad)
+    public domiciliosEstudiante:CiudadEstudiante[];
 
     constructor(nombre:string){
         this.nombre=nombre

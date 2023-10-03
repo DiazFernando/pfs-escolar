@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AsistenciaService } from './asistencia.service';
 import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 
@@ -12,23 +12,9 @@ export class AsistenciaController {
     return this.asistenciaService.create(createAsistenciaDto);
   }
 
-  @Get()
-  findAll() {
-    return this.asistenciaService.findAll();
-  }
+    @Get('orm')
+    async getAllOrm():Promise<CreateAsistenciaDto[]>{
+        return await this.asistenciaService.findAllOrm();
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.asistenciaService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() createAsistenciaDto: CreateAsistenciaDto) {
-    return this.asistenciaService.update(+id, createAsistenciaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.asistenciaService.remove(+id);
-  }
 }

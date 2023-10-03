@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Asistencia } from './entities/asistencia.entity';
+import { EstudianteClase } from 'src/estudiante/entities/estudiante_clase.entity';
 
 
 @Injectable()
 export class AsistenciaService {
-  create(createAsistenciaDto: CreateAsistenciaDto) {
-    return 'This action adds a new asistencia';
-  }
+  constructor(@InjectRepository(Asistencia)
+  private readonly asistenciaRepository:Repository<Asistencia>,
+  @InjectRepository(EstudianteClase)
+  private readonly estudianteClaseRepository:Repository<EstudianteClase>){}
 
-  findAll() {
-    return `This action returns all asistencia`;
-  }
+async create(createAsistenciaDto: CreateAsistenciaDto) {
+const { estudianteId,claseId} = createAsistenciaDto;
+const asistencia_estudiante = await this.estudianteClaseRepository.findOne({where:{estudianteId:estudianteId,claseId:claseId}});
+if(!asistencia_estudiante)
+return 'no existe estudiante/clase'
+return await this.asistenciaRepository.save(new Asistencia(claseId,estudianteId));
+}
 
-  findOne(id: number) {
-    return `This action returns a #${id} asistencia`;
-  }
-
-  update(id: number, createAsistenciaDto: CreateAsistenciaDto) {
-    return `This action updates a #${id} asistencia`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} asistencia`;
-  }
+async findAllOrm():Promise<CreateAsistenciaDto[]>{
+  return await this.asistenciaRepository.find();
+}
 }
